@@ -43,7 +43,7 @@ const Landing: React.FC = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
       // Hide Spline if viewport is approximately 570x1270
-      if (width <= 1000 && height <= 2000) {
+      if (width <= 1000 && height <= 1700) {
         setShowSpline(false);
       } else {
         setShowSpline(true);
