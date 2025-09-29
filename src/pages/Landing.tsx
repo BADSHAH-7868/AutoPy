@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Sparkles, Code, ChevronDown, ChevronUp } from 'lucide-react';
@@ -36,17 +35,41 @@ const faqs: FAQ[] = [
 const Landing: React.FC = () => {
   const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showSpline, setShowSpline] = useState(true);
+
+  // Detect viewport size and toggle Spline visibility
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      // Hide Spline if viewport is approximately 570x1270
+      if (width <= 570 && height <= 1270) {
+        setShowSpline(false);
+      } else {
+        setShowSpline(true);
+      }
+    };
+
+    // Run on mount and on resize
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-white font-sans">
       {/* Hero Section with Spline Background */}
       <section className="relative w-full h-screen overflow-hidden">
-        {/* Background Spline */}
-        <div className="absolute inset-0 z-0">
-          <Spline scene="https://prod.spline.design/ZUynamjHU4Dfp1ni/scene.splinecode" />
-          {/* Gradient overlay for readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-950/70 to-transparent" />
-        </div>
+        {/* Background Spline (conditionally rendered) */}
+        {showSpline && (
+          <div className="absolute inset-0 z-0">
+            <Spline scene="https://prod.spline.design/ZUynamjHU4Dfp1ni/scene.splinecode" />
+            {/* Gradient overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-950/70 to-transparent" />
+          </div>
+        )}
 
         {/* Foreground Content */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
@@ -108,7 +131,6 @@ const Landing: React.FC = () => {
             >
               Join Ahsan Labs
             </motion.button>
-
           </motion.div>
         </div>
       </section>
